@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アステロイド</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <header class="header">
+      <h1>アステロイド</h1>
+      <p class="subtitle">隕石をすべて破壊してハイスコアを目指せ！</p>
+    </header>
+
+    <div class="game-container">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <div id="overlay" class="overlay">
+        <div class="panel">
+          <h2 id="overlayTitle">アステロイド</h2>
+          <p id="overlayText">← → で回転、↑ で加速、↓ で逆噴射、スペースで発射</p>
+          <p class="hint">隕石をすべて破壊すると次のステージへ</p>
+          <button id="startBtn" class="btn">ゲーム開始</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-item"><span class="label">SCORE</span><span id="score">0</span></div>
+      <div class="hud-item"><span class="label">LIVES</span><span id="lives">3</span></div>
+      <div class="hud-item"><span class="label">LEVEL</span><span id="level">1</span></div>
+    </div>
+
+    <footer class="footer">
+      <kbd>←</kbd><kbd>→</kbd> 回転 &nbsp;|&nbsp; <kbd>↑</kbd> 加速 &nbsp;|&nbsp; <kbd>↓</kbd> 逆噴射 &nbsp;|&nbsp; <kbd>Space</kbd> 発射 &nbsp;|&nbsp; <kbd>P</kbd> 一時停止
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
