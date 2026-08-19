@@ -1,0 +1,296 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0a1a;
+  --surface: #12122a;
+  --accent: #00f0ff;
+  --accent-dim: #00a8b3;
+  --danger: #ff3366;
+  --gold: #ffd700;
+  --text: #e0e8ff;
+  --text-dim: #8899bb;
+  /* キャンバス以外がウィンドウで占める縦方向の高さ（フッター等） */
+  --chrome: 70px;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+body {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: none;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 240, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255, 51, 102, 0.06) 0%, transparent 50%);
+  color: var(--text);
+  font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  justify-content: center;
+}
+
+.game-container {
+  position: relative;
+  /* Fit within the viewport: pick the smaller of the available width and
+     the width implied by the available height, keeping the 4:3 aspect ratio. */
+  width: min(100%, calc((100dvh - var(--chrome)) * 4 / 3));
+  aspect-ratio: 4 / 3;
+  border: 2px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(0, 240, 255, 0.15),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #050510;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(5, 5, 16, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.panel {
+  text-align: center;
+  padding: 2rem;
+  max-width: 400px;
+}
+
+.game-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--accent), #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: var(--text);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem !important;
+}
+
+.panel h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.panel p {
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.panel .hint {
+  font-size: 0.85rem;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.btn {
+  background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+  color: #000;
+  border: none;
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(to bottom, rgba(5, 5, 16, 0.75), rgba(5, 5, 16, 0));
+  pointer-events: none;
+}
+
+.hud-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.hud-item .label {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+}
+
+.hud-item span:last-child {
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+.footer {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+kbd {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+/* ===== スマホ用仮想コントローラー ===== */
+/* 既定は非表示。タッチ端末でのみ表示する（PCはキーボード操作のまま）。
+   レイアウト用のプロパティは常に持たせておき、表示切り替えは display のみで行う。 */
+.touch-controls {
+  display: none;
+  width: 100%;
+  max-width: 640px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 0.5rem;
+}
+
+.tc-group {
+  display: flex;
+  gap: 1.1rem;
+}
+
+.tc-btn {
+  width: 5.5rem;
+  height: 5.5rem;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  background: rgba(18, 18, 42, 0.85);
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.15);
+  /* タッチでのスクロール・拡大・テキスト選択を防止 */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.tc-btn.active,
+.tc-btn:active {
+  background: rgba(0, 240, 255, 0.25);
+  transform: scale(0.94);
+}
+
+.tc-btn-fire {
+  width: 6.5rem;
+  height: 6.5rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  color: #000;
+  background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+  border-color: rgba(0, 240, 255, 0.6);
+}
+
+.tc-btn-fire.active,
+.tc-btn-fire:active {
+  background: linear-gradient(135deg, var(--accent), #aef6ff);
+  transform: scale(0.94);
+}
+
+/* タッチ端末では仮想コントローラーを表示する。
+   メディアクエリ、または JS が付与する html.touch-device クラスのどちらかで有効化。 */
+@media (hover: none) and (pointer: coarse) {
+  :root {
+    --chrome: 230px;
+  }
+  .touch-controls {
+    display: flex;
+  }
+  .footer {
+    display: none;
+  }
+}
+
+html.touch-device {
+  /* キャンバス以外の縦占有分（コントローラー等）を増やして高さを確保 */
+  --chrome: 230px;
+}
+
+html.touch-device .touch-controls {
+  display: flex;
+}
+
+/* キーボード用の説明はスマホでは非表示 */
+html.touch-device .footer {
+  display: none;
+}
